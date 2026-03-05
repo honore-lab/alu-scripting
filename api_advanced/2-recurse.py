@@ -1,27 +1,26 @@
 #!/usr/bin/python3
-"""
-Recursive function to get all hot post titles
-"""
+"""Recursive function to get all hot post titles."""
 import requests
 
 
-def recurse(subreddit, hot_list=[], after=None):
-    """Recursively collect titles"""
+def recurse(subreddit, hot_list=None, after=None):
+    """Return list of titles for all hot posts."""
+    if hot_list is None:
+        hot_list = []
+
     url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
 
-    headers = {"User-Agent": "HonoreAPI/1.0"}
+    headers = {"User-Agent": "alu-api-project"}
 
-    params = {
-        "after": after
-    }
+    params = {"after": after}
 
-    res = requests.get(url, headers=headers, params=params,
-                       allow_redirects=False)
+    response = requests.get(url, headers=headers,
+                            params=params, allow_redirects=False)
 
-    if res.status_code != 200:
+    if response.status_code != 200:
         return None
 
-    data = res.json().get("data")
+    data = response.json().get("data")
 
     posts = data.get("children")
 

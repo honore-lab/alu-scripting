@@ -1,25 +1,21 @@
 #!/usr/bin/python3
-"""
-Prints top 10 hot post titles
-"""
+"""Print titles of the first 10 hot posts."""
 import requests
 
 
 def top_ten(subreddit):
-    """Print top 10 hot posts"""
+    """Print top 10 hot post titles."""
     url = "https://www.reddit.com/r/{}/hot.json?limit=10".format(subreddit)
 
-    headers = {
-        "User-Agent": "HonoreAPI/1.0"
-    }
+    headers = {"User-Agent": "alu-api-project"}
 
-    res = requests.get(url, headers=headers, allow_redirects=False)
+    response = requests.get(url, headers=headers, allow_redirects=False)
 
-    if res.status_code != 200:
+    if response.status_code != 200:
         print(None)
         return
 
-    posts = res.json().get("data").get("children")
+    posts = response.json().get("data").get("children")
 
     for post in posts:
         print(post.get("data").get("title"))

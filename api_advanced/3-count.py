@@ -1,28 +1,26 @@
 #!/usr/bin/python3
-"""
-Counts keywords in hot article titles
-"""
+"""Count keywords in hot post titles."""
 import requests
 
 
 def count_words(subreddit, word_list, after=None, counts=None):
-    """Recursive keyword counter"""
+    """Recursively count words in titles."""
     if counts is None:
         counts = {}
 
-    headers = {"User-Agent": "HonoreAPI/1.0"}
+    headers = {"User-Agent": "alu-api-project"}
 
     url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
 
     params = {"after": after}
 
-    res = requests.get(url, headers=headers, params=params,
-                       allow_redirects=False)
+    response = requests.get(url, headers=headers,
+                            params=params, allow_redirects=False)
 
-    if res.status_code != 200:
+    if response.status_code != 200:
         return
 
-    data = res.json().get("data")
+    data = response.json().get("data")
 
     posts = data.get("children")
 
@@ -38,8 +36,7 @@ def count_words(subreddit, word_list, after=None, counts=None):
     if after is not None:
         return count_words(subreddit, word_list, after, counts)
 
-    sorted_words = sorted(counts.items(),
-                          key=lambda x: (-x[1], x[0]))
+    sorted_words = sorted(counts.items(), key=lambda x: (-x[1], x[0]))
 
     for word, count in sorted_words:
         if count > 0:
