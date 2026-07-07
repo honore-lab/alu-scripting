@@ -8,16 +8,18 @@ def number_of_subscribers(subreddit):
     url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
 
-    response = requests.get(url, headers=headers, allow_redirects=False)
-
-    # If the subreddit is invalid, it will return a redirect (302) or error (404)
-    if response.status_code != 200:
-        return 0
-
     try:
-        data = response.json().get('data', {})
-        subscribers = data.get('subscribers')
+        response = requests.get(url, headers=headers, allow_redirects=False)
 
+        # If it redirects (302) or errors out (404, 403), it is invalid
+        if response.status_code != 200:
+            return 0
+
+        results = response.json()
+        if 'data' not in results:
+            return 0
+
+        subscribers = results.get('data', {}).get('subscribers')
         if subscribers is None:
             return 0
 
