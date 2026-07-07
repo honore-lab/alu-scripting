@@ -10,17 +10,10 @@ def number_of_subscribers(subreddit):
 
     try:
         response = requests.get(url, headers=headers, allow_redirects=False)
-
-        # Catch normal errors or redirects instantly
-        if response.status_code in [302, 404, 403, 500]:
-            return 0
-
-        data = response.json()
-        if not isinstance(data, dict):
-            return 0
-
-        sub_count = data.get('data', {}).get('subscribers', 0)
-        return sub_count if sub_count is not None else 0
-
+        if response.status_code == 200:
+            data = response.json().get('data', {})
+            if data:
+                return data.get('subscribers', 0)
+        return 0
     except Exception:
         return 0
