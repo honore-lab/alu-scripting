@@ -8,16 +8,17 @@ def top_ten(subreddit):
     url = "https://www.reddit.com/r/{}/hot.json?limit=10".format(subreddit)
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
 
-    response = requests.get(url, headers=headers, allow_redirects=False)
-    if response.status_code == 200:
-        try:
-            children = response.json().get('data', {}).get('children', [])
-            if not children:
+    try:
+        response = requests.get(url, headers=headers, allow_redirects=False)
+        if response.status_code == 200:
+            data = response.json().get('data', {})
+            children = data.get('children', [])
+            if not children or children is None:
                 print(None)
                 return
             for post in children:
                 print(post.get('data', {}).get('title'))
-        except Exception:
+        else:
             print(None)
-    else:
+    except Exception:
         print(None)
